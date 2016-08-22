@@ -14,7 +14,7 @@ class GSIAuthenticator(Authenticator):
                        help="""The encoding to use for GSI"""
                        ).tag(config=True)
     server = Unicode('server',
-                     help="""The MY Proxy server to use for authentication."""
+                     help="""The MyProxy server to use for authentication."""
                      ).tag(config=True)
 
     cert_path_prefix = Unicode('/tmp/x509_',
