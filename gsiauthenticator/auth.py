@@ -1,6 +1,6 @@
 import os
 
-from traitlets import Unicode
+from traitlets import Unicode, Integer
 from tornado import gen
 
 from jupyterhub.auth import Authenticator
@@ -13,9 +13,13 @@ class GSIAuthenticator(Authenticator):
     encoding = Unicode('utf8',
                        help="""The encoding to use for GSI"""
                        ).tag(config=True)
-    server = Unicode('server',
+    server = Unicode('localhost',
                      help="""The MyProxy server to use for authentication."""
                      ).tag(config=True)
+
+    port = Integer(7512,
+                   help="""The MyProxy port to use"""
+                   ).tag(config=True)
 
     cert_path_prefix = Unicode('/tmp/x509_',
                                help="""The path prefix for the cert/key file"""
@@ -23,13 +27,14 @@ class GSIAuthenticator(Authenticator):
 
     @gen.coroutine
     def authenticate(self, handler, data):
-        """Authenticate with GSI, and return the proxy certificate if login is successful.
+        """Authenticate with GSI, and return the proxy certificate
+        if login is successful.
 
         Return None otherwise.
         """
         username = data['username']
         try:
-            resp = myproxy_logon_py(self.server, username, data['password'])
+            resp = myproxy_logon_py(self.server, username, data['password'], port=self.port)
             # print(resp)
             if 'key' in resp:
                 file = '%s%s' % (self.cert_path_prefix, username)
