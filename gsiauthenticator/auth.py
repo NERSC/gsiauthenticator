@@ -48,6 +48,6 @@ class GSIAuthenticator(Authenticator):
                                  username, handler.request.remote_ip)
             else:
                 self.log.warning("GSI Authentication failed: ")
-            raise
+            return None
         else:
             return username
