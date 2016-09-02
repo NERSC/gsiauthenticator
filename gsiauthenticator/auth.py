@@ -25,6 +25,10 @@ class GSIAuthenticator(Authenticator):
                                help="""The path prefix for the cert/key file"""
                                ).tag(config=True)
 
+    proxy_lifetime = Integer(43200,
+                             help="""Lifetime (seconds) of the X509 Proxy"""
+                             ).tag(config=True)
+
     @gen.coroutine
     def authenticate(self, handler, data):
         """Authenticate with GSI, and return the proxy certificate
@@ -34,7 +38,11 @@ class GSIAuthenticator(Authenticator):
         """
         username = data['username']
         try:
-            resp = myproxy_logon_py(self.server, username, data['password'], port=self.port)
+            resp = myproxy_logon_py(self.server,
+                                    username,
+                                    data['password'],
+                                    lifetime=self.proxy_lifetime,
+                                    port=self.port)
             # print(resp)
             if 'key' in resp:
                 file = '%s%s' % (self.cert_path_prefix, username)
