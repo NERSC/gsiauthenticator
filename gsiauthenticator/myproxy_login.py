@@ -137,7 +137,7 @@ def myproxy_logon_py(hostname,username,passphrase,lifetime=43200,port=7512):
     Exceptions:  GetException, RetrieveProxyException
     """
 
-    context = SSL.Context(SSL.SSLv3_METHOD)
+    context = SSL.Context(SSL.SSLv23_METHOD)
 
     # disable for compatibility with myproxy server (er, globus)
     # globus doesn't handle this case, apparently, and instead
